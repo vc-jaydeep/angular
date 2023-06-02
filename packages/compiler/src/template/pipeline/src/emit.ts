@@ -11,7 +11,6 @@ import {ConstantPool} from '../../../constant_pool';
 import * as ir from '../ir';
 
 import type {ComponentCompilationJob, HostBindingCompilationJob, ViewCompilationUnit} from './compilation';
-
 import {phaseAlignPipeVariadicVarOffset} from './phases/align_pipe_variadic_var_offset';
 import {phaseFindAnyCasts} from './phases/any_cast';
 import {phaseAttributeExtraction} from './phases/attribute_extraction';
@@ -44,6 +43,7 @@ import {phaseResolveDollarEvent} from './phases/resolve_dollar_event';
 import {phaseResolveNames} from './phases/resolve_names';
 import {phaseResolveSanitizers} from './phases/resolve_sanitizers';
 import {phaseSaveRestoreView} from './phases/save_restore_view';
+import {phaseSignalBindings} from './phases/signal_bindings';
 import {phaseSlotAllocation} from './phases/slot_allocation';
 import {phaseStyleBindingSpecialization} from './phases/style_binding_specialization';
 import {phaseTemporaryVariables} from './phases/temporary_variables';
@@ -58,6 +58,7 @@ export function transformTemplate(job: ComponentCompilationJob): void {
   phaseNamespace(job);
   phaseStyleBindingSpecialization(job);
   phaseBindingSpecialization(job);
+  phaseSignalBindings(job);
   phaseAttributeExtraction(job);
   phaseParseExtractedStyles(job);
   phaseRemoveEmptyBindings(job);
@@ -101,6 +102,7 @@ export function transformHostBinding(job: HostBindingCompilationJob): void {
   phaseHostStylePropertyParsing(job);
   phaseStyleBindingSpecialization(job);
   phaseBindingSpecialization(job);
+  phaseSignalBindings(job);
   phasePureLiteralStructures(job);
   phaseNullishCoalescing(job);
   phaseExpandSafeReads(job);

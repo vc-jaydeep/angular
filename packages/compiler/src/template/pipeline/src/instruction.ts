@@ -213,6 +213,21 @@ export function classMap(expression: o.Expression): ir.UpdateOp {
   return call(Identifiers.classMap, [expression], null);
 }
 
+export function propertyCreate(
+    name: string, expression: o.Expression, sanitizer: o.Expression|null,
+    sourceSpan: ParseSourceSpan): ir.CreateOp {
+  const args: o.Expression[] = [
+    o.literal(name),
+    o.fn([], [new o.ReturnStatement(expression)]),
+  ];
+
+  if (sanitizer !== null) {
+    args.push(sanitizer);
+  }
+
+  return call(Identifiers.propertyCreate, args, sourceSpan);
+}
+
 const PIPE_BINDINGS: o.ExternalReference[] = [
   Identifiers.pipeBind1,
   Identifiers.pipeBind2,

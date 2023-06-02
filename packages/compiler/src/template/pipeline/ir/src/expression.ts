@@ -10,11 +10,11 @@ import * as o from '../../../../output/output_ast';
 import type {ParseSourceSpan} from '../../../../parse_util';
 
 import {ExpressionKind, OpKind, SanitizerFn} from './enums';
-import {ConsumesVarsTrait, UsesSlotIndex, UsesSlotIndexTrait, UsesVarOffset, UsesVarOffsetTrait} from './traits';
-
+import {Interpolation} from './interpolation';
 import type {XrefId} from './operations';
 import type {CreateOp} from './ops/create';
-import {Interpolation, type UpdateOp} from './ops/update';
+import {type UpdateOp} from './ops/update';
+import {ConsumesVarsTrait, UsesSlotIndex, UsesSlotIndexTrait, UsesVarOffset, UsesVarOffsetTrait} from './traits';
 
 /**
  * An `o.Expression` subtype representing a logical expression in the intermediate representation.
@@ -780,6 +780,7 @@ export function transformExpressionsInOp(
       }
       break;
     case OpKind.Property:
+    case OpKind.PropertyCreate:
     case OpKind.Attribute:
       if (op.expression instanceof Interpolation) {
         transformExpressionsInInterpolation(op.expression, transform, flags);
@@ -906,6 +907,7 @@ export function transformExpressionsInStatement(
 /**
  * Checks whether the given expression is a string literal.
  */
-export function isStringLiteral(expr: o.Expression): expr is o.LiteralExpr&{value: string} {
-  return expr instanceof o.LiteralExpr && typeof expr.value === 'string';
+export function isStringLiteral(expr: o.Expression): expr is o.LiteralExpr&{
+  value: string
 }
+{ return expr instanceof o.LiteralExpr && typeof expr.value === 'string'; }

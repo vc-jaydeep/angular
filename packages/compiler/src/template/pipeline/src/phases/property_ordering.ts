@@ -22,6 +22,8 @@ const ORDERING: {
   transform?: (ops: Array<ir.UpdateOp>) => Array<ir.UpdateOp>
 }[] =
     [
+      // TODO(signals): Think about ordering for instructions in the create block!
+      // Right now, not relevant as we only have a single property create instruction.
       {test: kindTest(ir.OpKind.StyleMap), transform: keepLast},
       {test: kindTest(ir.OpKind.ClassMap), transform: keepLast},
       {test: kindTest(ir.OpKind.StyleProp)},

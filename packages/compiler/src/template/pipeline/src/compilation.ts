@@ -75,6 +75,9 @@ export interface CompilationJob {
 
   componentName: string;
 
+  /** Whether the job compiles a signal-based component. */
+  isSignal: boolean;
+
   /**
    * The root compilation unit, such as the component's template, or the host binding's compilation
    * unit.
@@ -106,7 +109,7 @@ export class HostBindingCompilationJob extends CompilationUnit implements Compil
   // TODO: Perhaps we should accept a reference to the enclosing component, and get the name from
   // there?
   constructor(
-      readonly componentName: string, readonly pool: ConstantPool,
+      readonly componentName: string, readonly isSignal: boolean, readonly pool: ConstantPool,
       readonly compatibility: ir.CompatibilityMode) {
     super(0 as ir.XrefId);
     this.nextXrefId = 1 as ir.XrefId;
@@ -159,7 +162,7 @@ export class ComponentCompilationJob implements CompilationJob {
   readonly root: ViewCompilationUnit;
 
   constructor(
-      readonly componentName: string, readonly pool: ConstantPool,
+      readonly componentName: string, readonly isSignal: boolean, readonly pool: ConstantPool,
       readonly compatibility: ir.CompatibilityMode) {
     // Allocate the root view.
     const root = new ViewCompilationUnit(this, this.allocateXrefId(), null);

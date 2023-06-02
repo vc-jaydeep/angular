@@ -24,6 +24,7 @@ export function phaseAttributeExtraction(cpl: ComponentCompilationJob): void {
           extractAttributeOp(view, op, elements);
           break;
         case ir.OpKind.Property:
+        case ir.OpKind.PropertyCreate:
           if (!op.isAnimationTrigger) {
             ir.OpList.insertBefore<ir.CreateOp>(
                 ir.createExtractedAttributeOp(

@@ -96,6 +96,12 @@ export enum OpKind {
   Binding,
 
   /**
+   * A placeholder operation reserving space for `Binding` operations that end up being
+   * moved into the creation block phase for signal components.
+   */
+  BindingSignalPlaceholder,
+
+  /**
    * An operation to bind an expression to a property of an element.
    */
   Property,
@@ -149,6 +155,11 @@ export enum OpKind {
    * A namespace change, which causes the subsequent elements to be processed as either HTML or SVG.
    */
   Namespace,
+
+  /*
+   * TODO
+   */
+  PropertyCreate,
 
   // TODO: Add Host Listeners, and possibly other host ops also.
 }
