@@ -144,7 +144,7 @@ function reifyCreateOperations(unit: CompilationUnit, ops: ir.OpList<ir.CreateOp
           // TODO: handle interpolation
         } else {
           ir.OpList.replace(
-              op, ng.propertyCreate(op.name, op.expression, op.sanitizer, op.sourceSpan));
+              op, ng.propertyCreate(op.slot!, op.name, op.expression, op.sanitizer, op.sourceSpan));
         }
         break;
       case ir.OpKind.Statement:

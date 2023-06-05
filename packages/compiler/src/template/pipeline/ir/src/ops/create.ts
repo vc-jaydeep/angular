@@ -12,7 +12,7 @@ import {ParseSourceSpan} from '../../../../../parse_util';
 import {BindingKind, OpKind} from '../enums';
 import {Interpolation} from '../interpolation';
 import {Op, OpList, XrefId} from '../operations';
-import {ConsumesSlotOpTrait, TRAIT_CONSUMES_SLOT, TRAIT_USES_SLOT_INDEX, UsesSlotIndexTrait} from '../traits';
+import {ConsumesSlotOpTrait, ConsumesVarsTrait, TRAIT_CONSUMES_SLOT, TRAIT_CONSUMES_VARS, TRAIT_USES_SLOT_INDEX, UsesSlotIndexTrait, UsesVarOffsetTrait} from '../traits';
 
 import {ListEndOp, NEW_OP, StatementOp, VariableOp} from './shared';
 import type {UpdateOp} from './update';
@@ -509,8 +509,11 @@ export function createBindingSignalPlaceholderOp(bindingXref: XrefId): BindingSi
   };
 }
 
-export interface PropertyCreateOp extends Op<CreateOp> {
+export interface PropertyCreateOp extends Op<CreateOp>, ConsumesSlotOpTrait, ConsumesVarsTrait {
   kind: OpKind.PropertyCreate;
+
+  /** Xref ID of the binding. Needed as we consume a slot for the expression to be stored. */
+  xref: XrefId;
 
   /**
    * Reference to the element on which the property is bound.
@@ -555,11 +558,12 @@ export interface PropertyCreateOp extends Op<CreateOp> {
  * Create a `PropertyCreateOp`.
  */
 export function createPropertyCreateOp(
-    target: XrefId, name: string, expression: o.Expression|Interpolation,
+    bindingXref: XrefId, target: XrefId, name: string, expression: o.Expression|Interpolation,
     isAnimationTrigger: boolean, securityContext: SecurityContext, isTemplate: boolean,
     sourceSpan: ParseSourceSpan): PropertyCreateOp {
   return {
     kind: OpKind.PropertyCreate,
+    xref: bindingXref,
     target,
     name,
     expression,
@@ -568,6 +572,8 @@ export function createPropertyCreateOp(
     sanitizer: null,
     isTemplate,
     sourceSpan,
+    ...TRAIT_CONSUMES_SLOT,
+    ...TRAIT_CONSUMES_VARS,
     ...NEW_OP,
   };
 }

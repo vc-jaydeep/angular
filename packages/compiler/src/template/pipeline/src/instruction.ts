@@ -214,9 +214,10 @@ export function classMap(expression: o.Expression): ir.UpdateOp {
 }
 
 export function propertyCreate(
-    name: string, expression: o.Expression, sanitizer: o.Expression|null,
+    slot: number, name: string, expression: o.Expression, sanitizer: o.Expression|null,
     sourceSpan: ParseSourceSpan): ir.CreateOp {
   const args: o.Expression[] = [
+    o.literal(slot),
     o.literal(name),
     o.fn([], [new o.ReturnStatement(expression)]),
   ];

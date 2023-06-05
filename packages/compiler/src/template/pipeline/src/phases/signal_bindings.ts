@@ -43,8 +43,8 @@ function processUnit(unit: CompilationUnit) {
         }
 
         const createOp = ir.createPropertyCreateOp(
-            op.target, op.name, op.expression, op.isAnimationTrigger, op.securityContext,
-            op.isTemplate, op.sourceSpan);
+            op.bindingXref, op.target, op.name, op.expression, op.isAnimationTrigger,
+            op.securityContext, op.isTemplate, op.sourceSpan);
 
         ir.OpList.replace<ir.CreateOp>(placeholderOp, createOp);
         placeholders.delete(op.bindingXref);
