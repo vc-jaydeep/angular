@@ -217,6 +217,7 @@ export interface Component extends Directive {
     moduleId?: string;
     preserveWhitespaces?: boolean;
     schemas?: SchemaMetadata[];
+    signals?: boolean;
     standalone?: boolean;
     styles?: string[];
     styleUrls?: string[];
@@ -511,6 +512,7 @@ export interface Directive {
         [key: string]: any;
     };
     selector?: string;
+    signals?: boolean;
     standalone?: boolean;
 }
 
@@ -851,11 +853,22 @@ export interface Input {
 export const Input: InputDecorator;
 
 // @public (undocumented)
+export function input<ReadT>(): InputSignal<ReadT | undefined, ReadT>;
+
+// @public (undocumented)
+export function input<ReadT>(defaultValue: ReadT): InputSignal<ReadT, ReadT>;
+
+// @public (undocumented)
 export interface InputDecorator {
     (arg?: string | Input): any;
     // (undocumented)
     new (arg?: string | Input): any;
 }
+
+// @public
+export type InputSignal<ReadT, WriteT> = Signal<ReadT> & {
+    [BRAND_WRITE_TYPE]: WriteT;
+};
 
 // @public
 export function isDevMode(): boolean;
@@ -975,6 +988,9 @@ export enum MissingTranslationStrategy {
     // (undocumented)
     Warning = 1
 }
+
+// @public
+export type ModelSignal<ReadT, WriteT> = InputSignal<ReadT, WriteT> & Pick<WritableSignal<WriteT>, 'set' | 'update' | 'mutate'>;
 
 // @public @deprecated
 export class ModuleWithComponentFactories<T> {
