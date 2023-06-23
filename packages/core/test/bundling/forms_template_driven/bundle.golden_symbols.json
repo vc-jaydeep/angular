@@ -1110,6 +1110,9 @@
     "name": "getViewRefs"
   },
   {
+    "name": "getVirtualInstructionIndex"
+  },
+  {
     "name": "handleError"
   },
   {
