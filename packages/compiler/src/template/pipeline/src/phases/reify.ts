@@ -121,10 +121,14 @@ function reifyCreateOperations(unit: CompilationUnit, ops: ir.OpList<ir.CreateOp
         if (op.variable.name === null) {
           throw new Error(`AssertionError: unnamed variable ${op.xref}`);
         }
+        let initializer: o.Expression|undefined = op.initializer;
+        if (initializer instanceof o.LiteralExpr && initializer.value === undefined) {
+          initializer = undefined;
+        }
         ir.OpList.replace<ir.CreateOp>(
             op,
             ir.createStatementOp(new o.DeclareVarStmt(
-                op.variable.name, op.initializer, undefined, o.StmtModifier.Final)));
+                op.variable.name, initializer, undefined, o.StmtModifier.Final)));
         break;
       case ir.OpKind.Namespace:
         switch (op.active) {
@@ -257,6 +261,8 @@ function reifyIrExpression(expr: o.Expression): o.Expression {
       return ng.nextContext(expr.steps);
     case ir.ExpressionKind.Reference:
       return ng.reference(expr.slot! + 1 + expr.offset);
+    case ir.ExpressionKind.ShallowReference:
+      return ng.shallowReference(expr.slot! + 1 + expr.offset);
     case ir.ExpressionKind.LexicalRead:
       throw new Error(`AssertionError: unresolved LexicalRead of ${expr.name}`);
     case ir.ExpressionKind.RestoreView:

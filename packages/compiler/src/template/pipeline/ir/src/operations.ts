@@ -279,9 +279,6 @@ export class OpList<OpT extends Op<OpT>> {
 
     op.debugListId = target.debugListId;
 
-    // Just in case.
-    op.prev = null;
-
     target.prev!.next = op;
     op.prev = target.prev;
 

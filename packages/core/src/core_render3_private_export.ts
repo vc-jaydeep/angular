@@ -173,10 +173,12 @@ export {
   ɵɵresolveWindow,
   ɵɵrestoreView,
 
+
   ɵɵsetComponentScope,
   ɵɵsetNgModuleScope,
   ɵɵgetComponentDepsFactory,
   ɵɵStandaloneFeature,
+  ɵɵshallowReference,
   ɵɵstyleMap,
   ɵɵstyleMapInterpolate1,
   ɵɵstyleMapInterpolate2,

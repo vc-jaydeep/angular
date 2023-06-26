@@ -94,6 +94,7 @@ export {
   ɵɵpropertyInterpolateV,
 
   ɵɵreference,
+  ɵɵshallowReference,
 
   ɵɵstyleMap,
   ɵɵstyleMapInterpolate1,

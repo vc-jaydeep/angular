@@ -17,6 +17,7 @@ import {phaseAttributeExtraction} from './phases/attribute_extraction';
 import {phaseBindingSpecialization} from './phases/binding_specialization';
 import {phaseChaining} from './phases/chaining';
 import {phaseConstCollection} from './phases/const_collection';
+import {phaseCreationVarColocation} from './phases/creation_var_colocation';
 import {phaseEmptyElements} from './phases/empty_elements';
 import {phaseExpandSafeReads} from './phases/expand_safe_reads';
 import {phaseGenerateAdvance} from './phases/generate_advance';
@@ -82,6 +83,7 @@ export function transformTemplate(job: ComponentCompilationJob): void {
   phaseVarCounting(job);
   phaseGenerateAdvance(job);
   phaseVariableOptimization(job);
+  phaseCreationVarColocation(job);
   phaseNaming(job);
   phaseMergeNextContext(job);
   phaseNgContainer(job);
