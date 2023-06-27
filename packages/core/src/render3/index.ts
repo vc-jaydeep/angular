@@ -92,6 +92,7 @@ export {
   ɵɵpropertyInterpolate7,
   ɵɵpropertyInterpolate8,
   ɵɵpropertyInterpolateV,
+  ɵɵstringifyInterpolation,
 
   ɵɵreference,
   ɵɵshallowReference,
