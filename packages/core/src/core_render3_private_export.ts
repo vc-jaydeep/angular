@@ -166,6 +166,7 @@ export {
   ɵɵpureFunction7,
   ɵɵpureFunction8,
   ɵɵpureFunctionV,
+  ɵɵviewQueryCreate,
   ɵɵqueryRefresh,
   ɵɵreference,
   ɵɵresetView,

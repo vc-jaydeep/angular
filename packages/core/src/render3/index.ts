@@ -193,7 +193,9 @@ export {
   ɵɵcontentQuery,
   ɵɵloadQuery,
   ɵɵqueryRefresh,
-  ɵɵviewQuery} from './query';
+  ɵɵviewQuery
+} from './query';
+export {ɵɵviewQueryCreate} from './reactivity/queries';
 export {
   ɵɵdisableBindings,
 
