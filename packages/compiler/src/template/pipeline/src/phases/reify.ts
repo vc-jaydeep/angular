@@ -121,6 +121,8 @@ function reifyCreateOperations(unit: CompilationUnit, ops: ir.OpList<ir.CreateOp
         if (op.variable.name === null) {
           throw new Error(`AssertionError: unnamed variable ${op.xref}`);
         }
+        // Optimization for variable co-location. If we know the initializer is undefined,
+        // we don't need to set an explicit one to avoid e.g. a `let b = undefined`.
         let initializer: o.Expression|undefined = op.initializer;
         if (initializer instanceof o.LiteralExpr && initializer.value === undefined) {
           initializer = undefined;
@@ -128,7 +130,8 @@ function reifyCreateOperations(unit: CompilationUnit, ops: ir.OpList<ir.CreateOp
         ir.OpList.replace<ir.CreateOp>(
             op,
             ir.createStatementOp(new o.DeclareVarStmt(
-                op.variable.name, initializer, undefined, o.StmtModifier.Final)));
+                op.variable.name, initializer, undefined,
+                op.isConstant ? o.StmtModifier.Final : undefined)));
         break;
       case ir.OpKind.Namespace:
         switch (op.active) {
@@ -239,7 +242,8 @@ function reifyUpdateOperations(_unit: CompilationUnit, ops: ir.OpList<ir.UpdateO
         ir.OpList.replace<ir.UpdateOp>(
             op,
             ir.createStatementOp(new o.DeclareVarStmt(
-                op.variable.name, op.initializer, undefined, o.StmtModifier.Final)));
+                op.variable.name, op.initializer, undefined,
+                op.isConstant ? o.StmtModifier.Final : undefined)));
         break;
       case ir.OpKind.Statement:
         // Pass statement operations directly through.
