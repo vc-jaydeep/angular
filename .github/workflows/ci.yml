@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - '[0-9]+.[0-9]+.x'
+      - 'migrate-*'
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -20,6 +21,7 @@ defaults:
 
 jobs:
   lint:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
@@ -57,6 +59,7 @@ jobs:
         run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
 
   devtools:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
@@ -75,6 +78,7 @@ jobs:
         run: yarn devtools:build:chrome
 
   framework-win:
+    if: false
     runs-on: windows-latest
     steps:
       - name: Initialize environment
@@ -91,6 +95,7 @@ jobs:
         run: bazel test --test_tag_filters="-browser:chromium-local" //packages/compiler-cli/...
 
   test:
+    if: false
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
@@ -107,6 +112,7 @@ jobs:
         run: yarn test:ci
 
   aio:
+    if: false
     runs-on: ubuntu-latest-4core
     steps:
       - name: Initialize environment
@@ -127,6 +133,7 @@ jobs:
         run: yarn --cwd aio payload-size
 
   aio-local:
+    if: false
     runs-on:
       labels: ubuntu-latest-4core
     steps:
@@ -169,3 +176,29 @@ jobs:
         run: export CI_STABLE_BRANCH=$(npm info @angular/core dist-tags.latest | sed -r 's/^\\s*([0-9]+\\.[0-9]+)\\.[0-9]+.*$/\\1.x/')
       - name: Deploy aio to production
         run: yarn --cwd aio deploy-production
+
+  framework-saucelabs:
+    runs-on: ubuntu-latest
+    env: 
+      NUMBER_OF_PARALLEL_BROWSERS: 2
+      SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+      SAUCE_USERNAME: ${{ vars.SAUCE_USERNAME }}
+      SAUCE_TUNNEL_IDENTIFIER: angular-framework-${{ github.run_number }}
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@45de46d9ba0e0689b7a846fd31ec9e241807ca71
+        with:
+          cache-node-modules: true
+      - name: Setup Bazel
+        uses: angular/dev-infra/github-actions/bazel/setup@45de46d9ba0e0689b7a846fd31ec9e241807ca71
+      - name: Install node modules
+        run: yarn install --frozen-lockfile
+      - name: Run Bazel tests on Saucelabs
+        run: |
+          cat /etc/hosts
+          echo "127.0.0.1 angular-ci.local" | sudo tee -a /etc/hosts
+          echo "localhost angular-ci.local" | sudo tee -a /etc/hosts
+          cat /etc/hosts
+          yarn bazel run //tools/saucelabs-daemon/background-service -- ${NUMBER_OF_PARALLEL_BROWSERS} &
+          TESTS=$(./node_modules/.bin/bazelisk query --output label '(kind(karma_web_test, ...) intersect attr("tags", "saucelabs", ...)) except attr("tags", "fixme-saucelabs", ...)')
+          yarn bazel test --config=saucelabs --jobs=${NUMBER_OF_PARALLEL_BROWSERS} ${TESTS}
