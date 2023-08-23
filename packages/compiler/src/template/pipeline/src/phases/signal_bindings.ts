@@ -52,8 +52,12 @@ function processUnit(unit: CompilationUnit) {
             op.bindingXref, op.target, op.name, expression, op.isAnimationTrigger,
             op.securityContext, op.isTemplate, op.sourceSpan);
 
+        // Replace the placeholder with the new instruction.
         ir.OpList.replace<ir.CreateOp>(placeholderOp, createOp);
         placeholders.delete(op.bindingXref);
+
+        // Remove the property update operation, as we have the create operation now.
+        ir.OpList.remove<ir.UpdateOp>(op);
       }
     }
   }
