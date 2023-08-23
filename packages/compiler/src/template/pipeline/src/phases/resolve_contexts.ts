@@ -40,7 +40,7 @@ function processLexicalScope(view: CompilationUnit, ops: ir.OpList<ir.CreateOp|i
               // prefer the variable in non-root views because of the risk of closure-capturing
               // `ctx`.
 
-              if (view === view.tpl.root) {
+              if (view === view.job.root) {
                 // This is the root view, so it's safe to use `ctx` and we don't need to use this
                 // variable.
                 break;
