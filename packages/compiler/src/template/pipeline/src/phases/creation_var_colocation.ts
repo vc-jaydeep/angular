@@ -8,19 +8,19 @@
 
 import * as o from '../../../../output/output_ast';
 import * as ir from '../../ir';
-import type {ComponentCompilation, ViewCompilation} from '../compilation';
+import type {ComponentCompilationJob, ViewCompilationUnit} from '../compilation';
 
 /**
  * Moves variables defined in creation mode to only be initialized after their creation, splitting
  * declaration and initialization if necessary to allow forward references.
  */
-export function phaseCreationVarColocation(cpl: ComponentCompilation): void {
+export function phaseCreationVarColocation(cpl: ComponentCompilationJob): void {
   for (const view of cpl.views.values()) {
     processView(view);
   }
 }
 
-function processView(view: ViewCompilation): void {
+function processView(view: ViewCompilationUnit): void {
   const shallowDeclarations = new Map<ir.XrefId, ir.VariableOp<ir.CreateOp>[]>();
   const seenVariableReads = new Set<ir.XrefId>;
   let shallow = true;
